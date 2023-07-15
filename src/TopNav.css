@@ -1,0 +1,8 @@
+.topnav {
+  height: 3rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #b79ced;
+  color: white;
+}

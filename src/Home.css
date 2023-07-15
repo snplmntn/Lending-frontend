@@ -1,0 +1,30 @@
+.content-wrapper {
+  height: calc(100vh - 3rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.to-pay {
+  background: linear-gradient(to bottom, #dec0f1, #b79ced);
+  width: 18rem;
+  height: 25rem;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #957fef;
+}
+
+.today {
+  width: 24rem;
+  height: 28rem;
+}
+
+h3 {
+  margin: 0;
+  text-align: center;
+}
+
+.namelists {
+  display: flex;
+  justify-content: space-between;
+}

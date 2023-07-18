@@ -43,8 +43,9 @@
 }
 
 .pink {
-  background-color: #00BF63;
+  background-color: #00bf63;
   color: white;
+  cursor: pointer;
 }
 
 .btn-close {
@@ -69,7 +70,7 @@ button {
   border: none;
 }
 
-p{
+p {
   margin: 0;
   text-align: center;
 }

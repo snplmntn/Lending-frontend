@@ -1,6 +1,4 @@
 import { useState } from "react";
-import TodayStatusList from "./StatusList/TodayStatusList";
-import StatusList from "./StatusList/YesterdayStatusList";
 import "./LendStatus.css";
 import axios from "axios";
 

@@ -1,6 +1,5 @@
 import TopNav from "./TopNav.jsx";
 import Home from "./Home.jsx";
-// import StatusList from "./StatusList";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -18,7 +17,6 @@ function App() {
 //     <Router>
 //       <Routes>
 //         <Route exact path="/" element={[<TopNav />, <Home />]} />
-//         <Route exact path="/home:id" element={<StatusList />} />
 //       </Routes>
 //     </Router>
 //   );

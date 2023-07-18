@@ -1,9 +1,9 @@
 import "./TopNav.css";
-import Add from "./Add.jsx";
+
 export default function TopNav() {
   return (
     <div className="topnav">
-      <Add />
+      <a>Add</a>
       <a>Home</a>
       <a>List</a>
     </div>

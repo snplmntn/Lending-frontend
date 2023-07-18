@@ -9,8 +9,22 @@ dark accent - #957fef
 
 html {
   font-family: "Poppins", sans-serif;
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  background-color: #485b68;
+  border-radius: 1rem;
+  width: 0.3rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f7f7f7b7;
+  border-radius: 1rem;
 }
 
 body {
   margin: 0;
+  height: 100vh;
+  overflow-y: scroll;
 }

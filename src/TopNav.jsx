@@ -1,11 +1,12 @@
 import "./TopNav.css";
+import { Link } from "react-router-dom";
 
 export default function TopNav() {
   return (
     <div className="topnav">
-      <a>Add</a>
-      <a>Home</a>
-      <a>List</a>
+      <Link to="/AddPage">Add</Link>
+      <Link to="/Home">Home</Link>
+      <Link to="/List">List</Link>
     </div>
   );
 }

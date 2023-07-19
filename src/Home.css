@@ -1,6 +1,6 @@
 .content-wrapper {
   height: calc(100vh - 3rem);
-  margin-top: 2rem;
+  margin-top: 3rem;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -8,7 +8,7 @@
 }
 
 .to-pay {
-  background-color: #36454F;
+  background-color: #36454f;
   color: rgb(248, 248, 248);
   width: 27rem;
   height: 35rem;
@@ -36,9 +36,10 @@ h3 {
 
 .namelists p {
   flex: calc(100% / 3);
+  text-align: center;
 }
 
-@media (max-width:1460px) {
+@media (max-width: 1460px) {
   html {
     font-size: 15px;
   }
@@ -49,20 +50,19 @@ h3 {
     width: 23rem;
     height: 31rem;
   }
-  
+
   .today {
     width: 27rem;
     height: 35rem;
   }
 }
 
-
 @media (max-width: 1135px) {
   .to-pay {
     width: 20rem;
     height: 28rem;
   }
-  
+
   .today {
     width: 24rem;
     height: 32rem;

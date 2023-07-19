@@ -2,9 +2,12 @@ import "./Home.css";
 import TodayStatusList from "./StatusList/TodayStatusList";
 import YesterdayStatusList from "./StatusList/YesterdayStatusList";
 import TomorrowStatusList from "./StatusList/TomorrowStatusList";
+import TopNav from "./TopNav";
 
 export default function Home() {
   return (
+    <>
+    <TopNav/>
     <div className="content-wrapper">
       <div className="to-pay">
         <h3>Yesterday</h3>
@@ -34,5 +37,6 @@ export default function Home() {
         <TomorrowStatusList />
       </div>
     </div>
+    </>  
   );
 }

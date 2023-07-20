@@ -1,0 +1,38 @@
+.unpaid-list-container {
+  margin-top: 3rem;
+  height: calc(100vh - 3rem);
+  padding: 3rem 5rem;
+}
+
+.unpaid-list {
+  height: 100%;
+  width: 100%;
+  background-color: #36454f;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.headings,
+.lists {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.headings p,
+.lists p {
+  flex: calc(100% / 5);
+  text-align: center;
+}
+
+.lists button {
+  display: inline;
+}
+
+.lists {
+  margin-top: 1rem;
+}
+
+.unpaid-list p {
+  color: white;
+}

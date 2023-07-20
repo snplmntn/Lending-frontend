@@ -1,6 +1,6 @@
 .add-person {
   padding: 1rem;
-  height: 16rem;
+  min-height: 18rem;
   width: 18rem;
   border-radius: 1rem;
   position: absolute;
@@ -29,6 +29,15 @@
   transition: all 0.5s;
 }
 
+.input-payment {
+  border: none;
+  padding: 0 0.5rem;
+  height: 1.8rem;
+  margin: 0.5rem 0 0.3rem 0;
+  width: 7.7rem;
+  border-radius: 0.3rem;
+}
+
 .person-info {
   text-align: center;
 }
@@ -46,6 +55,10 @@
   background-color: #00bf63;
   color: white;
   cursor: pointer;
+}
+
+.hidden {
+  display: none;
 }
 
 .btn-close {

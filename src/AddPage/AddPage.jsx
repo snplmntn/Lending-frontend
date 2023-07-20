@@ -14,9 +14,12 @@ export default function AddPage() {
   const dueDateRef = useRef();
   const letterRef = useRef();
   const proofRef = useRef();
-
   let [isConfirmed, setIsConfirmed] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+
+  let [isError, setIsError] = useState(false);
+  let [errorMsg, setErrorMsg] = useState("");
+  let validatedLendingType, validatedPaymentMethod;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,9 +35,94 @@ export default function AddPage() {
       proofRef: proofRef.current.files[0],
     };
 
+    if (fullNameRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Name may be empty.");
+      return;
+    } else if (lendingTypeRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Lending may be empty.");
+      return;
+    } else if (amountRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Amount may be empty.");
+      return;
+    } else if (paymentMethodRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Paying method may be empty.");
+      return;
+    } else if (!dueDateRef.current.value) {
+      setIsError((isError = true));
+      setErrorMsg("Due date may be empty.");
+      return;
+    } else if (letterRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Letter picture may be empty.");
+      return;
+    } else if (proofRef.current.value === "") {
+      setIsError((isError = true));
+      setErrorMsg("Proof picture may be empty.");
+      return;
+    }
+
+    if (lendingTypeRef.current.value.toUpperCase() === "UTANG") {
+      validatedLendingType = 1;
+    } else if (lendingTypeRef.current.value.toUpperCase() === "SANGLA") {
+      validatedLendingType = 2;
+    } else if (
+      lendingTypeRef.current.value === "1" ||
+      lendingTypeRef.current.value === "2"
+    ) {
+      validatedLendingType = lendingTypeRef.current.value;
+    } else {
+      setIsError((isError = true));
+      setErrorMsg('Lending Type must be either "Utang" or "SANGLA".');
+      return;
+    }
+
+    if (
+      paymentMethodRef.current.value.toUpperCase() === "DAILY" ||
+      paymentMethodRef.current.value.toUpperCase() === "ARAWAN"
+    ) {
+      validatedPaymentMethod = 1;
+    } else if (
+      paymentMethodRef.current.value.toUpperCase() === "WEEKLY" ||
+      paymentMethodRef.current.value.toUpperCase() === "LINGGUHAN" ||
+      paymentMethodRef.current.value.toUpperCase() === "LINGGOHAN"
+    ) {
+      validatedPaymentMethod = 2;
+    } else if (
+      paymentMethodRef.current.value === "15 30" ||
+      paymentMethodRef.current.value.toUpperCase() === "KINSENAS KATAPUSAN"
+    ) {
+      validatedPaymentMethod = 3;
+    } else if (paymentMethodRef.current.value === "10 25") {
+      validatedPaymentMethod = 4;
+    } else if (paymentMethodRef.current.value.toUpperCase() === "MONTHLY") {
+      validatedPaymentMethod = 5;
+    } else if (
+      paymentMethodRef.current.value === "1" ||
+      paymentMethodRef.current.value === "2" ||
+      paymentMethodRef.current.value === "3" ||
+      paymentMethodRef.current.value === "4" ||
+      paymentMethodRef.current.value === "5"
+    ) {
+      validatedPaymentMethod = paymentMethodRef.current.value;
+    } else {
+      setIsError((isError = true));
+      setErrorMsg(
+        'Payment Method must either be "Daily", "Weekly", "15 30", "10 25", "MONTHLY".'
+      );
+      return;
+    }
+
+    setErrorMsg("");
+    displayData.push(formData);
+
     //Creating photo files
     const letterFile = letterRef.current.files[0];
     const proofFile = proofRef.current.files[0];
+    const contractFullName = fullNameRef.current.value;
 
     displayData.push(formData);
 
@@ -43,26 +131,32 @@ export default function AddPage() {
     if (isAdded) {
       const letterData = new FormData();
       letterData.append("file", letterFile);
+      letterData.append("name", contractFullName);
 
       const proofData = new FormData();
       proofData.append("file", proofFile);
+      proofData.append("name", contractFullName);
 
-      const letterPath = await axios
-        .post(`http://localhost:8080/api/upload`, letterData)
-        .then(console.log("letter"));
+      const letterPath = await axios.post(
+        `http://localhost:8080/api/upload`,
+        letterData
+      );
 
-      const proofPath = await axios
-        .post(`http://localhost:8080/api/upload`, proofData)
-        .then(console.log("letter"));
+      const proofPath = await axios.post(
+        `http://localhost:8080/api/upload`,
+        proofData
+      );
 
       const contractData = {
         username: fullNameRef.current.value,
-        lendingType: lendingTypeRef.current.value,
+        lendingType: validatedLendingType,
         amount: amountRef.current.value,
-        payMethod: paymentMethodRef.current.value,
+        payMethod: validatedPaymentMethod,
         letter: letterPath.data.DownloadURL,
         proof: proofPath.data.DownloadURL,
       };
+
+      console.log(contractData.payMethod, contractData.lendingType);
 
       await axios.post(`http://localhost:8080/api/contract`, contractData);
 
@@ -74,6 +168,10 @@ export default function AddPage() {
   function handleEdit() {
     setIsConfirmed((isConfirmed = false));
   }
+
+  const changeErrorMessage = () => {
+    setErrorMsg(errorMsg.current.value);
+  };
 
   return (
     <div>
@@ -87,51 +185,52 @@ export default function AddPage() {
                 <input
                   type="text"
                   id="name"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={fullNameRef}
                 />
                 <label htmlFor="lendingtype">Lending Type:</label>
                 <input
                   type="text"
                   id="lendingtype"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={lendingTypeRef}
                 />
                 <label htmlFor="amount">Amount:</label>
                 <input
                   type="text"
                   id="amount"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={amountRef}
                 />
                 <label htmlFor="paymethod">Paying Method:</label>
                 <input
                   type="text"
                   id="paymethod"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={paymentMethodRef}
                 />
                 <label htmlFor="date">Due Date:</label>
                 <input
                   type="date"
                   id="date"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={dueDateRef}
                 />
-              </div>
+                <div className="error-msg">{isError && errorMsg}</div>
+              </div>{" "}
               <div className="wrapper-2">
                 <label htmlFor="letter">Letter:</label>
                 <input
                   type="file"
                   id="letter"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={letterRef}
                 />
                 <label htmlFor="proof">Proof:</label>
                 <input
                   type="file"
                   id="proof"
-                  onClick={handleEdit}
+                  onSubmit={handleEdit}
                   ref={proofRef}
                 />
               </div>

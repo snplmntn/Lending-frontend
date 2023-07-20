@@ -19,19 +19,25 @@ export default function StatusList() {
 
   return (
     <div className="status-lists">
-      {dueDates.map((el) => (
-        <div className="container" key={el._id}>
-          <p>{el.username}</p>
-          <p>{el.amountToPay}</p>
-          <LendStatus
-            id={el._id}
-            name={el.username}
-            amount={el.amountToPay}
-            status={el.status}
-            statusPlaceholder="..."
-          />
+      {dueDates.length === 0 ? (
+        <div>
+          <p>It seems that there's nothing here</p>
         </div>
-      ))}
+      ) : (
+        dueDates.map((el) => (
+          <div className="container" key={el._id}>
+            <p>{el.username}</p>
+            <p>{el.amountToPay}</p>
+            <LendStatus
+              id={el._id}
+              name={el.username}
+              amount={el.amountToPay}
+              status={el.status}
+              statusPlaceholder="..."
+            />
+          </div>
+        ))
+      )}
     </div>
   );
 }

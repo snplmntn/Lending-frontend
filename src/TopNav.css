@@ -8,9 +8,44 @@
   align-items: center;
   background-color: #36454F;
   color: rgb(248, 248, 248);
+  z-index: 3;
+}
+
+.active {
+  border-bottom: 2px solid rgba(160, 238, 136, 0.781);
+}
+
+.list-links-container {
+  height: 7rem;
+  width: 15rem;
+  padding: 1rem;
+  background-color: #1f374be1;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(5px);
+  position: absolute;
+  top: 4rem;
+  right: 8%;
+  z-index: 2;
+}
+
+.list-links-container a {
+  display: block;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+  transition: all 0.5s;
 }
 
 a {
-  color: white;
+  color: rgb(255, 255, 255);
   text-decoration: none;
+  cursor: pointer;
 }

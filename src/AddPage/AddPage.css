@@ -35,6 +35,12 @@
    bottom: 1.2rem;
 }
 
+.error-msg {
+    height: 21px;
+    color: rgb(255, 69, 69);
+    animation: shake 1s;
+}
+
 #form-submit, #form-submit--add {
     position: absolute;
     transform: translate(-50%, -5rem);
@@ -44,6 +50,7 @@
     border-radius: calc(5.5rem / 2);
     left: 50%;
     bottom: 5rem;
+    cursor: pointer;
 }
 
 #form-submit--add {
@@ -51,7 +58,7 @@
     color: black;
 }
 
-p {
+.wrapper-1 p {
     color: rgb(248, 248, 248);
     margin-bottom: 2.5rem;
     text-align: start;
@@ -61,7 +68,7 @@ label {
     color: rgb(248, 248, 248);
 }
 
-input {
+.wrapper-1 input, .wrapper-2 input {
     width: 100%;
     height: 2rem;
     padding: 0 0.5rem;
@@ -76,4 +83,87 @@ input {
 
 input:focus {
     outline: 0;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(4px);
+    }
+
+    25% {
+        transform: translateX(-8px);
+
+    }
+
+    50% {
+        transform: translateX(16px);
+    }
+
+    75% {
+        transform: translateX(32px);
+    }
+
+    100% {
+        transform: translateX(16px);
+    }
+}
+
+@media (max-width: 850px){
+    html {
+        font-size: 14px;
+    }
+
+    .addpage-container {
+        margin-top: 3rem;
+        height: auto;
+        padding: 3rem 1rem;
+        margin-bottom: 1rem;
+
+    }
+
+    .addpage-container--contents {
+        display: block;
+        height: 100%;
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    #form-submit, #form-submit--add {
+        position: static; 
+        transform: translate(-50%, -15%); 
+        /* width: 7rem;
+        height: 2.5rem;  */
+        /* border: none;  */
+        /* border-radius: calc(2.5rem / 2);  */
+        margin-left: 50%;
+        /* left: 0;
+        bottom: 0;  */
+    }
+
+    .inputs, .final {
+        border-right: 0;
+        border-left: 0;
+        padding: 0;
+    }
+
+    .inputs {
+        height: 35rem;
+        border-bottom: 1px solid rgb(248, 248, 248); 
+        padding: 1rem 1rem 2rem 1rem;
+        position: relative;
+    }
+    
+    .final {
+        border-top: 1px solid rgb(248, 248, 248);
+        padding: 2rem 1rem 1rem 1rem;
+    }
+
+
+    .wrapper-2 {
+        position: static;
+        transform: translateY(0);
+        bottom: 0;
+        margin-top: 2rem;
+    }
 }

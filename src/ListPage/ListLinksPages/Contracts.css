@@ -1,0 +1,5 @@
+.headings p,
+.lists p {
+    flex: calc(100% / 8);
+    text-align: center;
+}

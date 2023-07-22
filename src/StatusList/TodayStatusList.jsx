@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./StatusList.css";
 import LendStatus from "../LendStatus.jsx";
 import axios from "axios";
+import { URL } from "../App";
 
 // import {tempData} from "./dummyData.js"
 // const dueDates = tempData;
@@ -12,9 +13,13 @@ export default function StatusList() {
   useEffect(() => {
     const fetchDueDates = async () => {
       const date = new Date(Date.now());
-      await axios
-        .get(`http://localhost:8080/api/dueDates/date/${date}`)
-        .then((dueDates) => setDueDates(dueDates.data));
+      await axios.get(`${URL}/dueDates/date/${date}`).then((dueDates) => {
+        // Sort the dueDates array based on status in ascending order
+        const sortedDueDates = dueDates.data.sort(
+          (a, b) => a.status - b.status
+        );
+        setDueDates(sortedDueDates);
+      });
     };
     fetchDueDates();
   }, []);

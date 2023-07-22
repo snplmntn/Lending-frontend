@@ -35,13 +35,47 @@
    bottom: 1.2rem;
 }
 
+.success-modal {
+    padding: 1rem 2rem;
+    min-height: 18rem;
+    min-width: 18rem;
+    border-radius: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #ffffffd3;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.success-modal p {
+    margin-top: 0.5rem;
+}
+
 .error-msg {
     height: 21px;
     color: rgb(255, 69, 69);
     animation: shake 1s;
 }
 
-#form-submit, #form-submit--add {
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    transition: all 0.5s;
+  }
+
+#form-submit, #form-submit--add, #cancel-btn, .confirm-btn {
     position: absolute;
     transform: translate(-50%, -5rem);
     width: 9rem;
@@ -53,8 +87,18 @@
     cursor: pointer;
 }
 
-#form-submit--add {
+#cancel-btn {
+    bottom: 3rem;
+    background-color: rgb(255, 90, 90);
+}
+
+.confirm-btn {
+    bottom: 7rem !important;
+}
+
+#form-submit--add, #success--add {
     background-color: #00bf63;
+    cursor: pointer;
     color: black;
 }
 
@@ -129,16 +173,23 @@ input:focus {
         position: relative;
     }
 
-    #form-submit, #form-submit--add {
+    #form-submit, #form-submit--add, #cancel-btn {
         position: static; 
         transform: translate(-50%, -15%); 
-        /* width: 7rem;
-        height: 2.5rem;  */
-        /* border: none;  */
-        /* border-radius: calc(2.5rem / 2);  */
+        /* transform: translate(-100%, -15%);  */
         margin-left: 50%;
-        /* left: 0;
-        bottom: 0;  */
+    }
+
+    #cancel-btn {
+        position: static; 
+        transform: translate(-1%, -135%)  !important;
+        bottom: 2rem;
+        /* margin-left: 50%; */
+    }
+    
+    .confirm-btn {
+        bottom: 1rem !important;
+        transform: translate(-99%, -15%) !important;
     }
 
     .inputs, .final {

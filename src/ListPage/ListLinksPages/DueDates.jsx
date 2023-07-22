@@ -1,35 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TopNav from "../../TopNav";
 import "./Unpaid.css";
 import axios from "axios";
 import LendStatus from "../../LendStatus";
+import { URL } from "../../App";
 
 export default function DueDates() {
   const [dueDates, setDueDates] = useState([]);
   const [pastDueDates, setPastDueDates] = useState([]);
+  // let typeRef = useRef();
+
+  //for testing
+  let typeRef = "ongoing";
+  //ongoing and past
 
   //Getting Ongoing Due Dates
   useEffect(() => {
-    const fetchDueDates = async () => {
+    const fetchueDates = async () => {
       const date = new Date(Date.now());
       date.setDate(date.getDate());
       await axios
-        .get(`http://localhost:8080/api/dueDates/date/ongoing/${date}`)
-        .then((dueDates) => setDueDates(dueDates.data));
+        .get(`http://localhost:8080/api/dueDates/${typeRef}/${date}`)
+        .then((dueDates) => {
+          // Sort the pastDueDates array by date in ascending order
+          const sortedDueDates = dueDates.data.sort(
+            (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
+          );
+          setDueDates(sortedDueDates); // Corrected this line to set the sorted array
+        })
+        .catch((error) => {
+          // Handle any errors that occur during the API request
+          console.error("Error fetching past due dates:", error);
+        });
     };
-    fetchDueDates();
-  }, []);
-
-  //Getting Past Due Dates
-  useEffect(() => {
-    const fetchPastDueDates = async () => {
-      const date = new Date(Date.now());
-      date.setDate(date.getDate());
-      await axios
-        .get(`http://localhost:8080/api/dueDates/date/past/${date}`)
-        .then((pastDueDates) => setPastDueDates(pastDueDates.data));
-    };
-    fetchPastDueDates();
+    fetchueDates();
   }, []);
 
   return (

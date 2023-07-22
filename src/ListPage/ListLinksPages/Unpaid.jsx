@@ -3,15 +3,20 @@ import TopNav from "../../TopNav";
 import "./Unpaid.css";
 import axios from "axios";
 import LendStatus from "../../LendStatus";
+import { URL } from "../../App";
 
 export default function Unpaid() {
   const [UnpaidDue, setUnpaidDues] = useState([]);
 
   useEffect(() => {
     const fetchDueDates = async () => {
-      await axios
-        .get("http://localhost:8080/api/dueDates/status/2")
-        .then((UnpaidDue) => setUnpaidDues(UnpaidDue.data));
+      await axios.get(`${URL}/dueDates/status/2`).then((UnpaidDue) => {
+        // Sort the due dates array by dueDate in ascending order
+        const sortedDueDates = UnpaidDue.data.sort(
+          (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
+        );
+        setUnpaidDues(sortedDueDates);
+      });
     };
     fetchDueDates();
   }, []);

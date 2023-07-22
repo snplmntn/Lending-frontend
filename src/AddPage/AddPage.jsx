@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import TopNav from "../TopNav";
 import "./AddPage.css";
 import axios from "axios";
+import { URL } from "../App";
 
 const displayData = [];
 
@@ -16,7 +17,7 @@ export default function AddPage() {
   const proofRef = useRef();
   let [isConfirmed, setIsConfirmed] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
-
+  const [isRequestSuccess, setIsRequestSuccess] = useState(2); //0 - success-modal, 1 - processing, 2 - moodal closed
   let [isError, setIsError] = useState(false);
   let [errorMsg, setErrorMsg] = useState("");
   let validatedLendingType, validatedPaymentMethod;
@@ -24,6 +25,7 @@ export default function AddPage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    console.log(dueDateRef.current.value);
     // Get the form data from the refs
     const formData = {
       fullName: fullNameRef.current.value,
@@ -116,6 +118,7 @@ export default function AddPage() {
       return;
     }
 
+    // console.log(displayData[displayData.length - 1].paymentMethod)
     setErrorMsg("");
     displayData.push(formData);
 
@@ -124,11 +127,11 @@ export default function AddPage() {
     const proofFile = proofRef.current.files[0];
     const contractFullName = fullNameRef.current.value;
 
-    displayData.push(formData);
-
+    //will show the confirm button
     setIsConfirmed(!isConfirmed);
 
     if (isAdded) {
+      setIsRequestSuccess(1);
       const letterData = new FormData();
       letterData.append("file", letterFile);
       letterData.append("name", contractFullName);
@@ -137,41 +140,40 @@ export default function AddPage() {
       proofData.append("file", proofFile);
       proofData.append("name", contractFullName);
 
-      const letterPath = await axios.post(
-        `http://localhost:8080/api/upload`,
-        letterData
-      );
+      const letterPath = await axios.post(`${URL}/upload`, letterData);
 
-      const proofPath = await axios.post(
-        `http://localhost:8080/api/upload`,
-        proofData
-      );
+      const proofPath = await axios.post(`${URL}/upload`, proofData);
 
       const contractData = {
         username: fullNameRef.current.value,
         lendingType: validatedLendingType,
         amount: amountRef.current.value,
         payMethod: validatedPaymentMethod,
+        dateLended: dueDateRef.current.value,
         letter: letterPath.data.DownloadURL,
         proof: proofPath.data.DownloadURL,
       };
+      setIsRequestSuccess(0);
+      await axios.post(`${URL}/contract`, contractData); //nag eerror tong part na to sakin
 
-      console.log(contractData.payMethod, contractData.lendingType);
-
-      await axios.post(`http://localhost:8080/api/contract`, contractData);
-
-      console.log("formData/your data is added to our database! ;)");
       e.target.reset();
     }
   }
 
-  function handleEdit() {
-    setIsConfirmed((isConfirmed = false));
+  //this will close the success--modal once "ok!" is clicked
+  function handleSuccessModal() {
+    setIsRequestSuccess(2);
+    setIsConfirmed(false);
+    location.reload();
   }
 
-  const changeErrorMessage = () => {
-    setErrorMsg(errorMsg.current.value);
-  };
+  function handleEdit() {
+    setIsConfirmed(false);
+  }
+
+  // const changeErrorMessage = () => {
+  //   setErrorMsg(errorMsg.current.value);
+  // };
 
   return (
     <div>
@@ -185,35 +187,35 @@ export default function AddPage() {
                 <input
                   type="text"
                   id="name"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={fullNameRef}
                 />
                 <label htmlFor="lendingtype">Lending Type:</label>
                 <input
                   type="text"
                   id="lendingtype"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={lendingTypeRef}
                 />
                 <label htmlFor="amount">Amount:</label>
                 <input
                   type="text"
                   id="amount"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={amountRef}
                 />
                 <label htmlFor="paymethod">Paying Method:</label>
                 <input
                   type="text"
                   id="paymethod"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={paymentMethodRef}
                 />
-                <label htmlFor="date">Due Date:</label>
+                <label htmlFor="date">Lend Date:</label>
                 <input
                   type="date"
                   id="date"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={dueDateRef}
                 />
                 <div className="error-msg">{isError && errorMsg}</div>
@@ -223,25 +225,32 @@ export default function AddPage() {
                 <input
                   type="file"
                   id="letter"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={letterRef}
                 />
                 <label htmlFor="proof">Proof:</label>
                 <input
                   type="file"
                   id="proof"
-                  onSubmit={handleEdit}
+                  disabled={isConfirmed ? true : false}
                   ref={proofRef}
                 />
               </div>
               {isConfirmed ? (
-                <button
-                  type="submit"
-                  id="form-submit--add"
-                  onClick={() => setIsAdded(!isAdded)}
-                >
-                  Confirm
-                </button>
+                <div className="button-wrapper">
+                  <button
+                    type="submit"
+                    id="form-submit--add"
+                    onClick={() => setIsAdded(!isAdded)}
+                    className={isConfirmed && "confirm-btn"}
+                  >
+                    Confirm
+                  </button>{" "}
+                  {/* if this is clicked this will submit the form*/}
+                  <button type="submit" id="cancel-btn" onClick={handleEdit}>
+                    Cancel
+                  </button>
+                </div>
               ) : (
                 <button type="submit" id="form-submit">
                   Add
@@ -251,36 +260,108 @@ export default function AddPage() {
           </div>
           <div className="final">
             <div className="wrapper-1">
-              {isConfirmed || displayData.length > 0 ? (
+              {isConfirmed && displayData.length > 0 ? (
                 <>
                   <p>
                     Full Name: {displayData[displayData.length - 1].fullName}
                   </p>
                   <p>
                     Lending Type:{" "}
-                    {displayData[displayData.length - 1].lendingType}
+                    {displayData[displayData.length - 1].lendingType === "1" ? (
+                      "Utang"
+                    ) : displayData[displayData.length - 1].lendingType ===
+                      "2" ? (
+                      "Sangla"
+                    ) : (
+                      <></>
+                    )}
                   </p>
                   <p>Amount: {displayData[displayData.length - 1].amount}</p>
                   <p>
                     Paying Method:{" "}
-                    {displayData[displayData.length - 1].paymentMethod}
+                    {displayData[displayData.length - 1].paymentMethod ===
+                    "1" ? (
+                      "Daily"
+                    ) : displayData[displayData.length - 1].paymentMethod ===
+                      "2" ? (
+                      "Weekly"
+                    ) : displayData[displayData.length - 1].paymentMethod ===
+                      "3" ? (
+                      "15th and 30th of the month"
+                    ) : displayData[displayData.length - 1].paymentMethod ===
+                      "4" ? (
+                      "10th and 25th of the month"
+                    ) : displayData[displayData.length - 1].paymentMethod ===
+                      "5" ? (
+                      "Buwanan"
+                    ) : (
+                      <></>
+                    )}
                   </p>
-                  <p>Due Date: {displayData[displayData.length - 1].dueDate}</p>
+                  <p>
+                    Lend Date: {displayData[displayData.length - 1].dueDate}
+                  </p>
                 </>
               ) : (
-                <>
-                  <p>Full Name: </p>
-                  <p>Lending Type: </p>
-                  <p>Amount: </p>
-                  <p>Paying Method: </p>
-                  <p>Due Date: </p>
-                </>
+                !isConfirmed && (
+                  <>
+                    <p>Full Name: </p>
+                    <p>Lending Type: </p>
+                    <p>Amount: </p>
+                    <p>Paying Method: </p>
+                    <p>Lend Date: </p>
+                  </>
+                )
               )}
             </div>
-            <div className="wrapper-2"></div>
           </div>
         </div>
       </div>
+      {isRequestSuccess === 0 ? (
+        <>
+          <div className="success-modal">
+            <h3>Contract Successfully created!</h3>
+            <p>Name: {displayData[displayData.length - 1].fullName}</p>
+            <p>
+              Lending Type:{" "}
+              {displayData[displayData.length - 1].lendingType === 1
+                ? "Utang"
+                : "Sangla"}
+            </p>
+            <p>Amount to Pay: P{displayData[displayData.length - 1].amount}</p>
+            <p>
+              Paying Method:{" "}
+              {displayData[displayData.length - 1].paymentMethod === "1" ||
+              displayData[displayData.length - 1].paymentMethod === 1
+                ? "Daily"
+                : displayData[displayData.length - 1].paymentMethod === "2" ||
+                  displayData[displayData.length - 1].paymentMethod === 2
+                ? "Weekly"
+                : displayData[displayData.length - 1].paymentMethod === "3" ||
+                  displayData[displayData.length - 1].paymentMethod === 3
+                ? "15th and 30th of the month"
+                : displayData[displayData.length - 1].paymentMethod === "4" ||
+                  displayData[displayData.length - 1].paymentMethod === 4
+                ? "10th and 25th of the month"
+                : "Buwanan"}
+            </p>
+            <p>Lend Date: {displayData[displayData.length - 1].dueDate}</p>
+            <button id="success--add" onClick={handleSuccessModal}>
+              OK!
+            </button>
+          </div>
+          <div className="overlay"></div>
+        </>
+      ) : isRequestSuccess === 1 ? (
+        <>
+          <div className="success-modal">
+            <h3>Processing</h3>
+          </div>
+          <div className="overlay"></div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

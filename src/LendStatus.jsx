@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 import "./LendStatus.css";
 import axios from "axios";
+import { URL } from "./App";
+import { AuthContext } from "./context/AuthContext";
 
 export default function LendStatus({
   id,
@@ -10,6 +12,8 @@ export default function LendStatus({
   status,
   statusPlaceholder,
 }) {
+  const user = useContext(AuthContext);
+
   const [isModalOpen, setModalOpen] = useState(false);
   let [isHidden, setIsHidden] = useState(true);
   let [isEqual, setIsEqual] = useState(false);
@@ -28,11 +32,10 @@ export default function LendStatus({
 
     const data = {
       status: 1,
+      changedToPaidBy: user.user.username,
     };
 
-    await axios
-      .put(`http://localhost:8080/api/dueDates/${id}`, data)
-      .then(location.reload());
+    await axios.put(`${URL}/dueDates/${id}`, data).then(location.reload());
   };
 
   const handleChangeDate = async () => {
@@ -46,14 +49,11 @@ export default function LendStatus({
       dueDate: newDueDate,
     };
 
-    await axios
-      .put(`http://localhost:8080/api/dueDates/${id}`, data)
-      .then(location.reload());
+    await axios.put(`${URL}/dueDates/${id}`, data).then(location.reload());
   };
 
   const handleReceiveAmount = () => {
-    let inputAmount = parseInt(amtRef.current.value);
-    console.log(inputAmount);
+    let inputAmount = Number(amtRef.current.value);
     if (amount === inputAmount) {
       setIsEqual(true);
     } else {
@@ -130,7 +130,6 @@ export default function LendStatus({
       <button className="add-btn" onClick={handleOpen} disabled={status === 1}>
         {status === 0 ? "..." : status === 1 ? "✔" : "❌"}
       </button>
-      {console.log(status)}
     </>
   );
 }

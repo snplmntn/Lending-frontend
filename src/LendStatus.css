@@ -72,6 +72,11 @@
   background: none;
 }
 
+.input-date {
+  margin-top: 1rem;
+  padding: 0.3rem 0.3rem;
+}
+
 button {
   display: block;
   height: 2.2rem;

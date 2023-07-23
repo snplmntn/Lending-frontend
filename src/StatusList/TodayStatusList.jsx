@@ -4,9 +4,6 @@ import LendStatus from "../LendStatus.jsx";
 import axios from "axios";
 import { URL } from "../App";
 
-// import {tempData} from "./dummyData.js"
-// const dueDates = tempData;
-
 export default function StatusList() {
   const [dueDates, setDueDates] = useState([]);
 
@@ -40,6 +37,7 @@ export default function StatusList() {
               name={el.username}
               amount={el.amountToPay}
               status={el.status}
+              contractId={el.contractID}
               statusPlaceholder="..."
             />
           </div>

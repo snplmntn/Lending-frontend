@@ -6,6 +6,7 @@ import { URL } from "./App";
 import { AuthContext } from "./context/AuthContext";
 
 export default function LendStatus({
+  contractId,
   id,
   name,
   amount,
@@ -30,12 +31,22 @@ export default function LendStatus({
   const handlePay = async () => {
     handleOpen();
 
-    const data = {
+    const contract = await axios.get(`${URL}/contract/${contractId}`);
+    const currentTotalPaid = contract.data.totalPaid + amount;
+
+    const dueDateData = {
       status: 1,
       changedToPaidBy: user.user.username,
     };
 
-    await axios.put(`${URL}/dueDates/${id}`, data).then(location.reload());
+    const contractData = {
+      totalPaid: currentTotalPaid,
+    };
+
+    await axios.put(`${URL}/contract/${contractId}`, contractData);
+    await axios
+      .put(`${URL}/dueDates/${id}`, dueDateData)
+      .then(location.reload());
   };
 
   const handleChangeDate = async () => {
@@ -118,7 +129,11 @@ export default function LendStatus({
                   className="input-date"
                   ref={selectedDateRef}
                 />
-                <button className="pink" onClick={handleChangeDate}>
+                <button
+                  className="pink"
+                  style={{ fontSize: "11px", color: "black" }}
+                  onClick={handleChangeDate}
+                >
                   SUBMIT CHANGE DATE
                 </button>
               </>

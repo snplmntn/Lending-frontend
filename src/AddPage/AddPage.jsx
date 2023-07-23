@@ -130,6 +130,7 @@ export default function AddPage() {
     //will show the confirm button
     setIsConfirmed(!isConfirmed);
 
+
     if (isAdded) {
       setIsRequestSuccess(1);
       const letterData = new FormData();
@@ -171,6 +172,9 @@ export default function AddPage() {
     setIsConfirmed(false);
   }
 
+  function handleConfirmBtn() {
+    setTimeout(() => {handleEdit()}, 5000)
+  }
   // const changeErrorMessage = () => {
   //   setErrorMsg(errorMsg.current.value);
   // };
@@ -252,7 +256,7 @@ export default function AddPage() {
                   </button>
                 </div>
               ) : (
-                <button type="submit" id="form-submit">
+                <button type="submit" onClick={handleConfirmBtn} id="form-submit">
                   Add
                 </button>
               )}

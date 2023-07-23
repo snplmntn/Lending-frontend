@@ -13,7 +13,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-  background-color: #485b68;
+  background-color: #485b6800;
   border-radius: 1rem;
   width: 0.3rem;
 }
@@ -27,4 +27,8 @@ body {
   margin: 0;
   height: 100vh;
   overflow-y: scroll;
+}
+
+button {
+  cursor: pointer;
 }

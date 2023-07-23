@@ -8,39 +8,55 @@ import { URL } from "../../App";
 export default function DueDates() {
   const [dueDates, setDueDates] = useState([]);
   const [pastDueDates, setPastDueDates] = useState([]);
-  // let typeRef = useRef();
+  const isIndicatorClickedStored = localStorage.getItem("isIndicatorClicked");
+  const initialIsIndicatorClicked = isIndicatorClickedStored !== "false";
+  const [isIndicatorClicked, setIsIndicatorClicked] = useState(
+    initialIsIndicatorClicked
+  );
 
-  //for testing
-  let typeRef = "ongoing";
-  //ongoing and past
+  let type;
+  if (isIndicatorClicked) type = "ongoing";
+  else type = "past";
 
-  //Getting Ongoing Due Dates
+  //Getting Due Dates
+  const fetchueDates = async (isIndicatorClicked) => {
+    const date = new Date(Date.now());
+    date.setDate(date.getDate());
+    await axios
+      .get(`${URL}/dueDates/${type}/${date}`)
+      .then((dueDates) => {
+        // Sort the pastDueDates array by date in ascending order
+        const sortedDueDates = dueDates.data.sort(
+          (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
+        );
+        setDueDates(sortedDueDates);
+      })
+      .catch((error) => {
+        console.error("Error fetching past due dates:", error);
+      });
+  };
+
   useEffect(() => {
-    const fetchueDates = async () => {
-      const date = new Date(Date.now());
-      date.setDate(date.getDate());
-      await axios
-        .get(`${URL}/dueDates/${typeRef}/${date}`)
-        .then((dueDates) => {
-          // Sort the pastDueDates array by date in ascending order
-          const sortedDueDates = dueDates.data.sort(
-            (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
-          );
-          setDueDates(sortedDueDates); // Corrected this line to set the sorted array
-        })
-        .catch((error) => {
-          // Handle any errors that occur during the API request
-          console.error("Error fetching past due dates:", error);
-        });
-    };
-    fetchueDates();
-  }, []);
+    fetchueDates(isIndicatorClicked);
+  }, [isIndicatorClicked]);
+
+  function lableIndicator() {
+    const updatedIsIndicatorClicked = !isIndicatorClicked;
+    localStorage.setItem(
+      "isIndicatorClicked",
+      String(updatedIsIndicatorClicked)
+    );
+    setIsIndicatorClicked(updatedIsIndicatorClicked);
+  }
 
   return (
     <>
       <TopNav />
       <div className="unpaid-list-container">
         <div className="unpaid-list">
+          <h3 className="indicator" onClick={lableIndicator}>
+            Due Dates: ({isIndicatorClicked ? "Ongoing" : "Past"})
+          </h3>
           <div className="headings">
             <p>Name</p>
             <p>Amount</p>

@@ -26,6 +26,7 @@ export default function Unpaid() {
       <TopNav />
       <div className="unpaid-list-container">
         <div className="unpaid-list">
+          <h3 className="indicator">Unpaid</h3>
           <div className="headings">
             <p>Name</p>
             <p>Amount</p>

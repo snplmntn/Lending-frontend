@@ -1,16 +1,16 @@
 import "./TopNav.css";
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "./context/AuthContext";
+// import { AuthContext } from "./context/AuthContext";
 
-async function logOutHere(dispatch) {
-  localStorage.removeItem("user");
-  dispatch({ type: "LOGIN_SUCCESS", payload: null });
-  location.replace("/");
-}
+// async function logOutHere(dispatch) {
+//   localStorage.removeItem("user");
+//   dispatch({ type: "LOGIN_SUCCESS", payload: null });
+//   location.replace("/");
+// }
 
 export default function TopNav() {
-  const { user, dispatch } = useContext(AuthContext);
+  // const { user, dispatch } = useContext(AuthContext);
 
   const [isListClicked, setIsListClicked] = useState(false);
 
@@ -22,14 +22,9 @@ export default function TopNav() {
     setIsListClicked(false);
   }
 
-  function logOut() {
-    logOutHere(dispatch);
-  }
-
   return (
     <>
       <div className="topnav">
-        <div className="greet" onClick={logOut}>{`Hi ${user.username}!`}</div>
         <NavLink
           to="/AddPage"
           onClick={handleCloseListNav}

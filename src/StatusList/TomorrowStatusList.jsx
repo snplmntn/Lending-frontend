@@ -38,6 +38,7 @@ export default function StatusList() {
               name={el.username}
               amount={el.amountToPay}
               status={el.status}
+              contractId={el.contractID}
               statusPlaceholder="..."
             />
           </div>

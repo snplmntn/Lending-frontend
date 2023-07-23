@@ -3,3 +3,16 @@
     flex: calc(100% / 8);
     text-align: center;
 }
+
+/* .indicator {
+    position: absolute;
+    width: 15rem;
+    height: 2.5rem;
+    left: 50%;
+    top: 2.5rem;
+    border-radius: calc(2.5rem/2);
+    transform: translate(-50%, -2rem);
+    background-color: rgb(42, 45, 48);
+    box-shadow: 0px 2px 4px 1px #0000009f;
+    text-indent: 0;
+  } */

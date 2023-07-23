@@ -45,12 +45,13 @@ export default function DueDates() {
       <TopNav />
       <div className="unpaid-list-container">
         <div className="unpaid-list">
+          <h3 className="indicator">Contracts</h3>
           <div className="headings">
             <p>Name</p>
             <p>Amount Lended</p>
             <p>Amount to Pay</p>
+            <p>Amount Paid</p>
             <p>Date Lended</p>
-            <p>Lending Type</p>
             <p>Paying Method</p>
             <p>Lend Status</p>
             <p>More Details</p>
@@ -67,8 +68,8 @@ export default function DueDates() {
                 <p>{el.username}</p>
                 <p>{el.amount}</p>
                 <p>{el.amountToPay}</p>
+                <p>{el.totalPaid}</p>
                 <p>{el.dateLended.slice(0, 10)}</p>
-                <p>{el.lendingType === 1 ? "Utang" : "Sangla"}</p>
                 <p>
                   {el.payMethod === 1
                     ? "Daily"

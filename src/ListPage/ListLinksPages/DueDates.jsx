@@ -20,7 +20,7 @@ export default function DueDates() {
       const date = new Date(Date.now());
       date.setDate(date.getDate());
       await axios
-        .get(`http://localhost:8080/api/dueDates/${typeRef}/${date}`)
+        .get(`${URL}/dueDates/${typeRef}/${date}`)
         .then((dueDates) => {
           // Sort the pastDueDates array by date in ascending order
           const sortedDueDates = dueDates.data.sort(

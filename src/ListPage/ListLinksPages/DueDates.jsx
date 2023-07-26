@@ -89,6 +89,7 @@ export default function DueDates() {
                 </p>
                 <p>
                   <LendStatus
+                    contractId={el.contractID}
                     id={el._id}
                     name={el.username}
                     amount={el.amountToPay}

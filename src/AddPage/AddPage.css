@@ -1,3 +1,7 @@
+body {
+    overflow-x: scroll;
+}
+
 .addpage-container {
     margin-top: 3rem;
     height: calc(100vh - 3rem);
@@ -97,7 +101,7 @@
 }
 
 #form-submit--add, #success--add {
-    background-color: #00bf63;
+    background-color: #29de87;
     cursor: pointer;
     color: black;
 }
@@ -129,29 +133,6 @@ input:focus {
     outline: 0;
 }
 
-@keyframes shake {
-    0% {
-        transform: translateX(4px);
-    }
-
-    25% {
-        transform: translateX(-8px);
-
-    }
-
-    50% {
-        transform: translateX(16px);
-    }
-
-    75% {
-        transform: translateX(32px);
-    }
-
-    100% {
-        transform: translateX(16px);
-    }
-}
-
 @media (max-width: 850px){
     html {
         font-size: 14px;
@@ -161,8 +142,7 @@ input:focus {
         margin-top: 3rem;
         height: auto;
         padding: 2rem 1rem;
-        margin-bottom: 1rem;
-
+        margin-bottom: 0;
     }
 
     .addpage-container--contents {

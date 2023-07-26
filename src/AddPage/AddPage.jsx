@@ -20,12 +20,12 @@ export default function AddPage() {
   const [isRequestSuccess, setIsRequestSuccess] = useState(2); //0 - success-modal, 1 - processing, 2 - moodal closed
   let [isError, setIsError] = useState(false);
   let [errorMsg, setErrorMsg] = useState("");
+  let [contractRes, setContractRes] = useState({});
   let validatedLendingType, validatedPaymentMethod;
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log(dueDateRef.current.value);
     // Get the form data from the refs
     const formData = {
       fullName: fullNameRef.current.value,
@@ -118,7 +118,6 @@ export default function AddPage() {
       return;
     }
 
-    // console.log(displayData[displayData.length - 1].paymentMethod)
     setErrorMsg("");
     displayData.push(formData);
 
@@ -130,32 +129,35 @@ export default function AddPage() {
     //will show the confirm button
     setIsConfirmed(!isConfirmed);
 
-
     if (isAdded) {
       setIsRequestSuccess(1);
-      const letterData = new FormData();
-      letterData.append("file", letterFile);
-      letterData.append("name", contractFullName);
+      const picturesData = new FormData();
+      picturesData.append("name", contractFullName);
+      picturesData.append("file1", letterFile);
+      picturesData.append("file2", proofFile);
 
-      const proofData = new FormData();
-      proofData.append("file", proofFile);
-      proofData.append("name", contractFullName);
+      try {
+        const uploadRes = await axios.post(`${URL}/upload`, picturesData);
+        const contractData = {
+          username: contractFullName,
+          lendingType: validatedLendingType,
+          amount: amountRef.current.value,
+          payMethod: validatedPaymentMethod,
+          dateLended: dueDateRef.current.value,
+          letter: uploadRes.data.letterURL,
+          proof: uploadRes.data.proofURL,
+        };
 
-      const letterPath = await axios.post(`${URL}/upload`, letterData);
-
-      const proofPath = await axios.post(`${URL}/upload`, proofData);
-
-      const contractData = {
-        username: fullNameRef.current.value,
-        lendingType: validatedLendingType,
-        amount: amountRef.current.value,
-        payMethod: validatedPaymentMethod,
-        dateLended: dueDateRef.current.value,
-        letter: letterPath.data.DownloadURL,
-        proof: proofPath.data.DownloadURL,
-      };
-      setIsRequestSuccess(0);
-      await axios.post(`${URL}/contract`, contractData); //nag eerror tong part na to sakin
+        try {
+          const res = await axios.post(`${URL}/contract`, contractData);
+          setContractRes(res.data);
+          setIsRequestSuccess(0);
+        } catch (err) {
+          console.log(err);
+        }
+      } catch (err) {
+        console.log(err);
+      }
 
       e.target.reset();
     }
@@ -173,11 +175,10 @@ export default function AddPage() {
   }
 
   function handleConfirmBtn() {
-    setTimeout(() => {handleEdit()}, 5000)
+    setTimeout(() => {
+      handleEdit();
+    }, 5000);
   }
-  // const changeErrorMessage = () => {
-  //   setErrorMsg(errorMsg.current.value);
-  // };
 
   return (
     <div>
@@ -256,7 +257,11 @@ export default function AddPage() {
                   </button>
                 </div>
               ) : (
-                <button type="submit" onClick={handleConfirmBtn} id="form-submit">
+                <button
+                  type="submit"
+                  onClick={handleConfirmBtn}
+                  id="form-submit"
+                >
                   Add
                 </button>
               )}
@@ -325,31 +330,27 @@ export default function AddPage() {
         <>
           <div className="success-modal">
             <h3>Contract Successfully created!</h3>
-            <p>Name: {displayData[displayData.length - 1].fullName}</p>
+            <p>Name: {contractRes.username}</p>
             <p>
-              Lending Type:{" "}
-              {displayData[displayData.length - 1].lendingType === 1
-                ? "Utang"
-                : "Sangla"}
+              Lending Type: {contractRes.lendingType === 1 ? "Utang" : "Sangla"}
             </p>
-            <p>Amount to Pay: P{displayData[displayData.length - 1].amount}</p>
+            <p>Amount to Pay: P{contractRes.amountToPay}</p>
             <p>
               Paying Method:{" "}
-              {displayData[displayData.length - 1].paymentMethod === "1" ||
-              displayData[displayData.length - 1].paymentMethod === 1
+              {contractRes.payMethod === 1
                 ? "Daily"
-                : displayData[displayData.length - 1].paymentMethod === "2" ||
-                  displayData[displayData.length - 1].paymentMethod === 2
+                : contractRes.payMethod === 2
                 ? "Weekly"
-                : displayData[displayData.length - 1].paymentMethod === "3" ||
-                  displayData[displayData.length - 1].paymentMethod === 3
+                : contractRes.payMethod === 3
                 ? "15th and 30th of the month"
-                : displayData[displayData.length - 1].paymentMethod === "4" ||
-                  displayData[displayData.length - 1].paymentMethod === 4
+                : contractRes.payMethod === 4
                 ? "10th and 25th of the month"
                 : "Buwanan"}
             </p>
-            <p>Lend Date: {displayData[displayData.length - 1].dueDate}</p>
+            <p>
+              Expected Date of Completion: {contractRes.finalDate.slice(0, 10)}
+            </p>
+            <p>Thank You!</p>
             <button id="success--add" onClick={handleSuccessModal}>
               OK!
             </button>

@@ -1,5 +1,9 @@
+body {
+  overflow-x: scroll;
+}
+
 .unpaid-list-container {
-  margin-top: 3rem;
+ margin-top: 3rem;
   height: calc(100vh - 3rem);
   padding: 3rem 5rem;
   position: relative;

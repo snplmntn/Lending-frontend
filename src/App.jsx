@@ -10,7 +10,6 @@ import { AuthContext } from "./context/AuthContext.jsx";
 import Home from "./Home.jsx";
 import Login from "./LoginPage/Login.jsx";
 import AddPage from "./AddPage/AddPage.jsx";
-import Lists from "./ListPage/Lists.jsx";
 import Contracts from "./ListPage/ListLinksPages/Contracts.jsx";
 import DueDates from "./ListPage/ListLinksPages/DueDates.jsx";
 import Unpaid from "./ListPage/ListLinksPages/Unpaid.jsx";
@@ -47,10 +46,6 @@ function App() {
         <Route
           path="/Home"
           element={user ? <Home /> : <Navigate replace to="/" />}
-        />
-        <Route
-          path="/List"
-          element={user ? <Lists /> : <Navigate replace to="/" />}
         />
         <Route
           path="/AddPage"

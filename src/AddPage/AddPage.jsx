@@ -18,6 +18,7 @@ export default function AddPage() {
   let [isConfirmed, setIsConfirmed] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [isRequestSuccess, setIsRequestSuccess] = useState(2); //0 - success-modal, 1 - processing, 2 - moodal closed
+  const [isDisabled, setIsDisabled] = useState(false);
   let [isError, setIsError] = useState(false);
   let [errorMsg, setErrorMsg] = useState("");
   let [contractRes, setContractRes] = useState({});
@@ -41,17 +42,9 @@ export default function AddPage() {
       setIsError((isError = true));
       setErrorMsg("Name may be empty.");
       return;
-    } else if (lendingTypeRef.current.value === "") {
-      setIsError((isError = true));
-      setErrorMsg("Lending may be empty.");
-      return;
     } else if (amountRef.current.value === "") {
       setIsError((isError = true));
       setErrorMsg("Amount may be empty.");
-      return;
-    } else if (paymentMethodRef.current.value === "") {
-      setIsError((isError = true));
-      setErrorMsg("Paying method may be empty.");
       return;
     } else if (!dueDateRef.current.value) {
       setIsError((isError = true));
@@ -64,57 +57,6 @@ export default function AddPage() {
     } else if (proofRef.current.value === "") {
       setIsError((isError = true));
       setErrorMsg("Proof picture may be empty.");
-      return;
-    }
-
-    if (lendingTypeRef.current.value.toUpperCase() === "UTANG") {
-      validatedLendingType = 1;
-    } else if (lendingTypeRef.current.value.toUpperCase() === "SANGLA") {
-      validatedLendingType = 2;
-    } else if (
-      lendingTypeRef.current.value === "1" ||
-      lendingTypeRef.current.value === "2"
-    ) {
-      validatedLendingType = lendingTypeRef.current.value;
-    } else {
-      setIsError((isError = true));
-      setErrorMsg('Lending Type must be either "Utang" or "SANGLA".');
-      return;
-    }
-
-    if (
-      paymentMethodRef.current.value.toUpperCase() === "DAILY" ||
-      paymentMethodRef.current.value.toUpperCase() === "ARAWAN"
-    ) {
-      validatedPaymentMethod = 1;
-    } else if (
-      paymentMethodRef.current.value.toUpperCase() === "WEEKLY" ||
-      paymentMethodRef.current.value.toUpperCase() === "LINGGUHAN" ||
-      paymentMethodRef.current.value.toUpperCase() === "LINGGOHAN"
-    ) {
-      validatedPaymentMethod = 2;
-    } else if (
-      paymentMethodRef.current.value === "15 30" ||
-      paymentMethodRef.current.value.toUpperCase() === "KINSENAS KATAPUSAN"
-    ) {
-      validatedPaymentMethod = 3;
-    } else if (paymentMethodRef.current.value === "10 25") {
-      validatedPaymentMethod = 4;
-    } else if (paymentMethodRef.current.value.toUpperCase() === "MONTHLY") {
-      validatedPaymentMethod = 5;
-    } else if (
-      paymentMethodRef.current.value === "1" ||
-      paymentMethodRef.current.value === "2" ||
-      paymentMethodRef.current.value === "3" ||
-      paymentMethodRef.current.value === "4" ||
-      paymentMethodRef.current.value === "5"
-    ) {
-      validatedPaymentMethod = paymentMethodRef.current.value;
-    } else {
-      setIsError((isError = true));
-      setErrorMsg(
-        'Payment Method must either be "Daily", "Weekly", "15 30", "10 25", "MONTHLY".'
-      );
       return;
     }
 
@@ -140,9 +82,9 @@ export default function AddPage() {
         const uploadRes = await axios.post(`${URL}/upload`, picturesData);
         const contractData = {
           username: contractFullName,
-          lendingType: validatedLendingType,
+          lendingType: lendingTypeRef.current.value,
           amount: amountRef.current.value,
-          payMethod: validatedPaymentMethod,
+          payMethod: paymentMethodRef.current.value,
           dateLended: dueDateRef.current.value,
           letter: uploadRes.data.letterURL,
           proof: uploadRes.data.proofURL,
@@ -176,7 +118,7 @@ export default function AddPage() {
 
   function handleConfirmBtn() {
     setTimeout(() => {
-      handleEdit();
+      setIsDisabled(true);
     }, 5000);
   }
 
@@ -196,12 +138,22 @@ export default function AddPage() {
                   ref={fullNameRef}
                 />
                 <label htmlFor="lendingtype">Lending Type:</label>
-                <input
+                {/* <input
                   type="text"
                   id="lendingtype"
                   disabled={isConfirmed ? true : false}
                   ref={lendingTypeRef}
-                />
+                /> */}
+                <select
+                  name="lending-type"
+                  id="lendingtype"
+                  disabled={isConfirmed ? true : false}
+                  defaultValue="1"
+                  ref={lendingTypeRef}
+                >
+                  <option value="1">Utang</option>
+                  <option value="2">Sangla</option>
+                </select>
                 <label htmlFor="amount">Amount:</label>
                 <input
                   type="text"
@@ -210,12 +162,19 @@ export default function AddPage() {
                   ref={amountRef}
                 />
                 <label htmlFor="paymethod">Paying Method:</label>
-                <input
-                  type="text"
+                <select
+                  name="paying-method"
                   id="paymethod"
                   disabled={isConfirmed ? true : false}
+                  defaultValue="5"
                   ref={paymentMethodRef}
-                />
+                >
+                  <option value="1">Daily</option>
+                  <option value="2">Weekly</option>
+                  <option value="3">15th and 30th day of the Month</option>
+                  <option value="4">10th and 25th day of the Month</option>
+                  <option value="5">Buwanan</option>
+                </select>
                 <label htmlFor="date">Lend Date:</label>
                 <input
                   type="date"
@@ -248,6 +207,11 @@ export default function AddPage() {
                     id="form-submit--add"
                     onClick={() => setIsAdded(!isAdded)}
                     className={isConfirmed && "confirm-btn"}
+                    style={{
+                      cursor: isDisabled ? "not-allowed" : "pointer",
+                      backgroundColor: "#09af5f",
+                    }}
+                    disabled={isDisabled ? true : false}
                   >
                     Confirm
                   </button>{" "}

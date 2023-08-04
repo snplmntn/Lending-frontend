@@ -54,7 +54,7 @@ export default function TopNav() {
               Unpaid
             </NavLink>
           </div>
-          <div id="overlay"></div>
+          <div id="overlay" onClick={handleOpenListNav}></div>
         </>
       )}
     </>

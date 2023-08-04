@@ -21,54 +21,71 @@ export default function Unpaid() {
     fetchDueDates();
   }, []);
 
+  const width = window.innerWidth;
+
   return (
     <>
       <TopNav />
       <div className="unpaid-list-container">
         <div className="unpaid-list">
           <h3 className="indicator">Unpaid</h3>
-          <div className="headings">
-            <p>Name</p>
-            <p>Amount</p>
-            <p>Due Date(yy/mm/dd)</p>
-            <p>Paying Method</p>
-            <p>Status</p>
-          </div>
-          {UnpaidDue.length === 0 ? (
-            <div>
-              <p style={{ fontWeight: "bold" }}>
-                It seems that there's nothing here
-              </p>
+          {width > 1080 && (
+            <div className="headings">
+              <p>Name</p>
+              <p>Amount</p>
+              <p>Due Date(yy/mm/dd)</p>
+              <p>Paying Method</p>
+              <p>Status</p>
             </div>
-          ) : (
-            UnpaidDue.map((el) => (
-              <div className="lists">
-                <p>{el.username}</p>
-                <p>{el.amountToPay}</p>
-                <p>{el.dueDate.slice(0, 10)}</p>
-                <p>
-                  {el.payMethod === 1
-                    ? "Daily"
-                    : el.payMethod === 2
-                    ? "Weekly"
-                    : el.payMethod === 3
-                    ? "15 30"
-                    : el.payMethod === 4
-                    ? "10 25"
-                    : "Monthly"}
-                </p>
-                <p>
-                  <LendStatus
-                    id={el._id}
-                    name={el.username}
-                    amount={el.amountToPay}
-                    status={el.status}
-                    statusPlaceholder="❌"
-                  />
+          )}
+          <div className="lists-container">
+            {UnpaidDue.length === 0 ? (
+              <div>
+                <p style={{ fontWeight: "bold" }}>
+                  It seems that there's nothing here
                 </p>
               </div>
-            ))
-          )}
+            ) : (
+              UnpaidDue.map((el) => (
+                <div className="lists" key={el._id}>
+                  <p>
+                    {width < 1080 && "Name: "}
+                    {el.username}
+                  </p>
+                  <p>
+                    {width < 1080 && "Amount: "}
+                    {el.amountToPay}
+                  </p>
+                  <p>
+                    {width < 1080 && "Due Date (yy/mm/dd): "}
+                    {el.dueDate.slice(0, 10)}
+                  </p>
+                  <p>
+                    {width < 1080 && "Paying Method: "}
+                    {el.payMethod === 1
+                      ? "Daily"
+                      : el.payMethod === 2
+                      ? "Weekly"
+                      : el.payMethod === 3
+                      ? "15 30"
+                      : el.payMethod === 4
+                      ? "10 25"
+                      : "Monthly"}
+                  </p>
+                  <p>
+                    {width < 1080 && "Status: "}
+                    <LendStatus
+                      id={el._id}
+                      name={el.username}
+                      amount={el.amountToPay}
+                      status={el.status}
+                      statusPlaceholder="❌"
+                    />
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -7,7 +7,6 @@ import { URL } from "../../App";
 
 export default function DueDates() {
   const [dueDates, setDueDates] = useState([]);
-  const [pastDueDates, setPastDueDates] = useState([]);
   const isIndicatorClickedStored = localStorage.getItem("isIndicatorClicked");
   const initialIsIndicatorClicked = isIndicatorClickedStored !== "false";
   const [isIndicatorClicked, setIsIndicatorClicked] = useState(
@@ -19,7 +18,7 @@ export default function DueDates() {
   else type = "past";
 
   //Getting Due Dates
-  const fetchueDates = async (isIndicatorClicked) => {
+  const fetchueDates = async () => {
     const date = new Date(Date.now());
     date.setDate(date.getDate());
     await axios
@@ -48,7 +47,7 @@ export default function DueDates() {
     );
     setIsIndicatorClicked(updatedIsIndicatorClicked);
   }
-
+  const width = window.innerWidth;
   return (
     <>
       <TopNav />
@@ -57,49 +56,61 @@ export default function DueDates() {
           <h3 className="indicator" onClick={lableIndicator}>
             Due Dates: ({isIndicatorClicked ? "Ongoing" : "Past"})
           </h3>
-          <div className="headings">
-            <p>Name</p>
-            <p>Amount</p>
-            <p>Due Date(yy/mm/dd)</p>
-            <p>Paying Method</p>
-            <p>Status</p>
-          </div>
-          {dueDates.length === 0 ? (
-            <div>
-              <p style={{ fontWeight: "bold" }}>
-                It seems that there's nothing here
-              </p>
+          {width > 1080 && (
+            <div className="headings">
+              <p>Name</p>
+              <p>Amount</p>
+              <p>Due Date(yy/mm/dd)</p>
+              <p>Paying Method</p>
+              <p>Status</p>
             </div>
-          ) : (
-            dueDates.map((el) => (
-              <div className="lists">
-                <p>{el.username}</p>
-                <p>{el.amountToPay}</p>
-                <p>{el.dueDate.slice(0, 10)}</p>
-                <p>
-                  {el.payMethod === 1
-                    ? "Daily"
-                    : el.payMethod === 2
-                    ? "Weekly"
-                    : el.payMethod === 3
-                    ? "15 30"
-                    : el.payMethod === 4
-                    ? "10 25"
-                    : "Monthly"}
-                </p>
-                <p>
-                  <LendStatus
-                    contractId={el.contractID}
-                    id={el._id}
-                    name={el.username}
-                    amount={el.amountToPay}
-                    status={el.status}
-                    statusPlaceholder="..."
-                  />
+          )}
+          <div className="lists-container">
+            {dueDates.length === 0 ? (
+              <div>
+                <p style={{ fontWeight: "bold" }}>
+                  It seems that there's nothing here
                 </p>
               </div>
-            ))
-          )}
+            ) : (
+              dueDates.map((el) => (
+                <div className="lists" key={el._id}>
+                  <p>
+                    {width < 1080 && "Name: "}
+                    {el.username}
+                  </p>
+                  <p>
+                    {width < 1080 && "Amount: "}
+                    {el.amountToPay}
+                  </p>
+                  <p>{el.dueDate.slice(0, 10)}</p>
+                  <p>
+                    {width < 1080 && "Pating Method: "}
+                    {el.payMethod === 1
+                      ? "Daily"
+                      : el.payMethod === 2
+                      ? "Weekly"
+                      : el.payMethod === 3
+                      ? "15 30"
+                      : el.payMethod === 4
+                      ? "10 25"
+                      : "Monthly"}
+                  </p>
+                  <p>
+                    {width < 1080 && "Status: "}
+                    <LendStatus
+                      contractId={el.contractID}
+                      id={el._id}
+                      name={el.username}
+                      amount={el.amountToPay}
+                      status={el.status}
+                      statusPlaceholder="..."
+                    />
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </>

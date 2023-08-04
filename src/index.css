@@ -14,13 +14,11 @@ html {
 
 ::-webkit-scrollbar {
   background-color: #485b6800;
-  border-radius: 1rem;
-  width: 0.1rem;
+  width: 0;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #f7f7f75b;
-  border-radius: 1rem;
 }
 
 body {

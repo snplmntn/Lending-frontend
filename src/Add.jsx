@@ -20,7 +20,6 @@ export default function Add() {
 
   return (
     <>
-      {/* <div></div> */}
       <p onClick={handleAdd()}>Add</p>
     </>
   );

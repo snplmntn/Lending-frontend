@@ -43,10 +43,17 @@ export default function LendStatus({
       totalPaid: currentTotalPaid,
     };
 
-    await axios.put(`${URL}/contract/${contractId}`, contractData);
-    await axios
-      .put(`${URL}/dueDates/${id}`, dueDateData)
-      .then(location.reload());
+    try {
+      await axios.put(`${URL}/contract/${contractId}`, contractData);
+      try {
+        await axios.put(`${URL}/dueDates/${id}`, dueDateData);
+        location.reload();
+      } catch (err) {
+        console.error(err);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleChangeDate = async () => {
@@ -60,7 +67,12 @@ export default function LendStatus({
       dueDate: newDueDate,
     };
 
-    await axios.put(`${URL}/dueDates/${id}`, data).then(location.reload());
+    try {
+      await axios.put(`${URL}/dueDates/${id}`, data);
+      location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleReceiveAmount = () => {

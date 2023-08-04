@@ -22,7 +22,7 @@ export default function Login() {
   const emailRef = useRef();
   const passRef = useRef();
   const { user, isFetching, error, dispatch } = useContext(AuthContext);
-  const [errorMsg, setErrorMsg] = useState()
+  const [errorMsg, setErrorMsg] = useState();
 
   function handleLogin(e) {
     e.preventDefault();
@@ -32,19 +32,14 @@ export default function Login() {
     if (emailRef.current.value == "") {
       setErrorMsg("Please enter an email");
       return;
-    }
-    else if (!emailValidator.test(emailRef.current.value)) {
+    } else if (!emailValidator.test(emailRef.current.value)) {
       return;
     }
-    
 
-    if(passRef.current.value === ""){
-      setErrorMsg("Enter a password")
+    if (passRef.current.value === "") {
+      setErrorMsg("Enter a password");
       return;
-    } 
-    // else if (passRef.current.value !== userpass) {
-    //   console.log("incorrect password")
-    // }
+    }
 
     loginCall(
       { email: emailRef.current.value, password: passRef.current.value },
@@ -52,8 +47,7 @@ export default function Login() {
     );
   }
 
-  //validator 
-
+  //validator
 
   return (
     <div className="login-page-container">
@@ -63,12 +57,7 @@ export default function Login() {
           <label htmlFor="username">Email</label>
           <input ref={emailRef} type="email" id="username" />
           <label htmlFor="pass">Password</label>
-          <input
-            ref={passRef}
-            type="password"
-            minLength={"6"}
-            id="pass"
-          />
+          <input ref={passRef} type="password" minLength={"6"} id="pass" />
           <p className="error-msg">{errorMsg}</p>
           <button className="login-btn" disabled={isFetching}>
             {isFetching ? "Logging in..." : "Login"}
